@@ -16,21 +16,31 @@
             <option value="9">9</option>
             <option value="10">10</option>
             <option value="11">11</option>
+            <option value="12">12</option>
         </select>
     </form>
-
+    
     <canvas width="512" height="512" id="canvas"></canvas>
-    <script id="polygenjs">
-        
+    <script id="shapes">
         var canvas = document.getElementById('canvas');
         var context = canvas.getContext('2d');
         canvas.style.display= 'block';
+
         var shapeRadius = 150;
+        var centerX = canvas.width / 2;
+        var centerY = canvas.height / 2;
+        
+        
 
         document.getElementById('sidesmenu').addEventListener("click", function(){
-            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas
+            // draw shape
             sidesCount = document.getElementById('sidesmenu').value;
             PolyGen(sidesCount, document.querySelector("canvas"), 0, shapeRadius, 8, "#222", 0, 0);
+            // draw game circle
+            context.arc(centerX, centerY, shapeRadius, 0, 2 * Math.PI, false);
+            context.lineWidth = 2;
+            context.stroke();
         })
     </script>
 
@@ -42,7 +52,8 @@
 		magnet.style.position = "absolute"; //css
         puck.style.position = "absolute";
 
-        // getMousePos where (0,0) is the top left corner of the canvas
+        // get position of mouse where (0,0) is the top left corner of the canvas
+        var mousePos = {x:0, y:0};
         function getMousePos(canvas, evt) {
             var rect = canvas.getBoundingClientRect();
             return {
@@ -50,71 +61,70 @@
             y: evt.clientY - rect.top
             };
         }
-
-        
-        var puckDrag = 50;
-        var midX = (canvas.width/2); // midX is the middle of the canvas
-        var midY = (canvas.height/2);
-        var mousePos = {x:0, y:0};
-        var puckpos = {x: midX, y: midY};
-        /*var gameSquareTopX = 0.38*canvas.width;
-        var gameSquareTopY = 0.38*canvas.height;
-        var gameSquareBotX = 0.72*canvas.width;
-        var gameSquareBotY = 0.72*canvas.height;*/
-        context.fillStyle = "#014421"; //css
-        context.font = "bold 25px Arial"; //css
         canvas.addEventListener('mousemove', function(evt) {
-            // draw magnet
             mousePos = getMousePos(canvas, evt);
-            // xPos = mousePos.x;
-            // yPos = mousePos.y;
-            // code below is used to put the current point beside the magnet
-            // context.clearRect(xPos, yPos, xPos+1, yPos+1);
-            // context.fillText("(" + Math.round(xPos) + "," + Math.round(yPos) + ")", xPos+50, yPos+50); 
         }, false);
+
         setInterval(drawMagnet, 10);
         setInterval(drawPuck,10);
 
+        // drawMagnet
+        var midX = (canvas.width/2); // get coordinates of middle of the canvas
+        var midY = (canvas.height/2);
 		function drawMagnet(){
-			magnet.style.left = mousePos.x - 10 + "px";
-			magnet.style.top = mousePos.y - 10 + "px";
-		}
+            // calculate rotation angle of magnet
+            var angle = Math.atan2(puckPos.y - mousePos.y, puckPos.x - mousePos.x );
+            angle = angle * (180/Math.PI);
 
+            // draw magnet
+			magnet.style.left = mousePos.x  + 10 + "px";
+            magnet.style.top = mousePos.y + 50 + "px";
+            magnet.style.transform = "rotate(" + angle  + "deg)";
+        }
+
+        /*function rotatePuck() {
+        var img = document.getElementById('myimage');
+        img.style.transform = 'rotate(180deg)';
+        }*/
+
+        // drawPuck
+        var puckDrag = 200; // defines "how slow" the puck follows the mouse
+        var puckPos = {x: midX, y: midY};
         function drawPuck(){
-            // below is code to calculate distance from the center to mousePos - not working
-            var centerDistX = Math.abs(puckpos.x - midX);
-            var centerDistY = Math.abs(puckpos.y - midY);
-            //console.log(centerDistY)
-            
-            // distance between mouse and puck - used to iteratively draw puck "towards" magnet
-            var mouseDistX = mousePos.x - puckpos.x;
-            var mouseDistY = mousePos.y - puckpos.y;
+            var centerDistX = Math.abs(puckPos.x - midX); // calculate distance from the center to puckPos
+            var centerDistY = Math.abs(puckPos.y - midY);
+            var centerDistScal = Math.sqrt(centerDistX**2 + centerDistY**2); // scalar distance b/w puck and center
 
+            var mouseDistX = mousePos.x - puckPos.x; // distance between mouse and puck - used to iteratively draw puck "towards" magnet
+            var mouseDistY = mousePos.y - puckPos.y;
+            var mouseDistScal = Math.sqrt(mouseDistX**2 + mouseDistY**2); // scalar distance b/w mouse and puck
+
+
+            if(centerDistScal<shapeRadius){ // if puck is in-bounds
+                puckPos.x += mouseDistX/puckDrag; // puck moves towards mouse
+                puckPos.y += mouseDistY/puckDrag;
+            } else { // if puck is out of bounds
+                puckPos.x -= (puckPos.x - midX)/puckDrag; // puckPos.x - midX = negative if on left side of screen
+                puckPos.y -= (puckPos.y - midY)/puckDrag; // this 
+            }
+
+            // add or subtract from puckPos based on mouse position and centerdist
+            /*
             if(centerDistX<shapeRadius){
-                puckpos.x += mouseDistX/puckDrag;
-            } else if(puckpos.x > midX){
-                {puckpos.x--}
-            } else {puckpos.x++}
-
+                puckPos.x += mouseDistX/puckDrag;
+            } else if(puckPos.x > midX){
+                {puckPos.x--}
+            } else {puckPos.x++}
             if(centerDistY<shapeRadius){
-                puckpos.y += mouseDistY/puckDrag;
-            } else if(puckpos.y > midY){
-                {puckpos.y--}
-            } else {puckpos.y++}
-            /*if(puckpos.x<=gameSquareBotX){
-                if(puckpos.x>=gameSquareTopX){
-                    puckpos.x += mouseDistX/puckDrag;
-                } else {puckpos.x++}
-            } else {puckpos.x--}
-            
-            if(puckpos.y<=gameSquareBotY){
-                if(puckpos.y>=gameSquareTopY){
-                    puckpos.y += mouseDistY/puckDrag;
-                } else {puckpos.y++}
-            } else {puckpos.y--}*/
+                puckPos.y += mouseDistY/puckDrag;
+            } else if(puckPos.y > midY){
+                {puckPos.y--}
+            } else {puckPos.y++}
+            */
 
-            puck.style.left = puckpos.x + "px";
-            puck.style.top = puckpos.y + "px";   
+            // draw puck - 10 and 25 are offsets to properly center the image on the mouse
+            puck.style.left = puckPos.x - 10 + "px";
+            puck.style.top = puckPos.y + 25 + "px";   
         }
     </script>
 </body>
