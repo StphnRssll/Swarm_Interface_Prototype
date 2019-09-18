@@ -19,16 +19,18 @@
         </select>
     </form>
 
-    <canvas width="1024" height="1024" id="canvas"></canvas>
+    <canvas width="512" height="512" id="canvas"></canvas>
     <script id="polygenjs">
+        
         var canvas = document.getElementById('canvas');
         var context = canvas.getContext('2d');
         canvas.style.display= 'block';
+        var shapeRadius = 150;
 
         document.getElementById('sidesmenu').addEventListener("click", function(){
             context.clearRect(0, 0, canvas.width, canvas.height);
             sidesCount = document.getElementById('sidesmenu').value;
-            PolyGen(sidesCount, document.querySelector("canvas"), 0, 250, 8, "#222", 0, 0);
+            PolyGen(sidesCount, document.querySelector("canvas"), 0, shapeRadius, 8, "#222", 0, 0);
         })
     </script>
 
@@ -36,7 +38,9 @@
     <img id="puck" src="./resources/puck.png" alt="HTML5 Icon"/>
     <script id="mouse">
         var magnet = document.getElementById("magnet");
+        var puck = document.getElementById("puck");
 		magnet.style.position = "absolute"; //css
+        puck.style.position = "absolute";
 
         // getMousePos where (0,0) is the top left corner of the canvas
         function getMousePos(canvas, evt) {
@@ -47,26 +51,70 @@
             };
         }
 
-        var mousePos = {x:0, y:0};
-        var midX = (canvas.width/2);
+        
+        var puckDrag = 50;
+        var midX = (canvas.width/2); // midX is the middle of the canvas
         var midY = (canvas.height/2);
-        context.fillStyle = "#014421";
-        context.font = "bold 25px Arial";
+        var mousePos = {x:0, y:0};
+        var puckpos = {x: midX, y: midY};
+        /*var gameSquareTopX = 0.38*canvas.width;
+        var gameSquareTopY = 0.38*canvas.height;
+        var gameSquareBotX = 0.72*canvas.width;
+        var gameSquareBotY = 0.72*canvas.height;*/
+        context.fillStyle = "#014421"; //css
+        context.font = "bold 25px Arial"; //css
         canvas.addEventListener('mousemove', function(evt) {
+            // draw magnet
             mousePos = getMousePos(canvas, evt);
-            var distX = mousePos.x - midX;
-            var distY = mousePos.y - midY;
-            xPos = mousePos.x;
-            yPos = mousePos.y;
+            // xPos = mousePos.x;
+            // yPos = mousePos.y;
             // code below is used to put the current point beside the magnet
             // context.clearRect(xPos, yPos, xPos+1, yPos+1);
-            // context.fillText("(" + Math.round(xPos) + "," + Math.round(yPos) + ")", xPos+50, yPos+50);    
+            // context.fillText("(" + Math.round(xPos) + "," + Math.round(yPos) + ")", xPos+50, yPos+50); 
         }, false);
-        setInterval(drawMagnet, 5);
+        setInterval(drawMagnet, 10);
+        setInterval(drawPuck,10);
 
 		function drawMagnet(){
 			magnet.style.left = mousePos.x - 10 + "px";
-			magnet.style.top = mousePos.y + 60 + "px";
+			magnet.style.top = mousePos.y - 10 + "px";
 		}
+
+        function drawPuck(){
+            // below is code to calculate distance from the center to mousePos - not working
+            var centerDistX = Math.abs(puckpos.x - midX);
+            var centerDistY = Math.abs(puckpos.y - midY);
+            //console.log(centerDistY)
+            
+            // distance between mouse and puck - used to iteratively draw puck "towards" magnet
+            var mouseDistX = mousePos.x - puckpos.x;
+            var mouseDistY = mousePos.y - puckpos.y;
+
+            if(centerDistX<shapeRadius){
+                puckpos.x += mouseDistX/puckDrag;
+            } else if(puckpos.x > midX){
+                {puckpos.x--}
+            } else {puckpos.x++}
+
+            if(centerDistY<shapeRadius){
+                puckpos.y += mouseDistY/puckDrag;
+            } else if(puckpos.y > midY){
+                {puckpos.y--}
+            } else {puckpos.y++}
+            /*if(puckpos.x<=gameSquareBotX){
+                if(puckpos.x>=gameSquareTopX){
+                    puckpos.x += mouseDistX/puckDrag;
+                } else {puckpos.x++}
+            } else {puckpos.x--}
+            
+            if(puckpos.y<=gameSquareBotY){
+                if(puckpos.y>=gameSquareTopY){
+                    puckpos.y += mouseDistY/puckDrag;
+                } else {puckpos.y++}
+            } else {puckpos.y--}*/
+
+            puck.style.left = puckpos.x + "px";
+            puck.style.top = puckpos.y + "px";   
+        }
     </script>
 </body>
