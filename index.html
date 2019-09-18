@@ -1,0 +1,72 @@
+<head>
+    <script src="./resources/js/polygen.js"></script>
+    <link rel="stylesheet" type="text/css" href="./resources/style.css">
+</head>
+
+<body>
+    <form name="form">
+        <select id="sidesmenu">
+            <option value="">Select a shape by number of sides</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+        </select>
+    </form>
+
+    <canvas width="1024" height="1024" id="canvas"></canvas>
+    <script id="polygenjs">
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+        canvas.style.display= 'block';
+
+        document.getElementById('sidesmenu').addEventListener("click", function(){
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            sidesCount = document.getElementById('sidesmenu').value;
+            PolyGen(sidesCount, document.querySelector("canvas"), 0, 250, 8, "#222", 0, 0);
+        })
+    </script>
+
+    <img id="magnet" src="./resources/magnet.png" alt="HTML5 Icon"/>
+    <img id="puck" src="./resources/puck.png" alt="HTML5 Icon"/>
+    <script id="mouse">
+        var magnet = document.getElementById("magnet");
+		magnet.style.position = "absolute"; //css
+
+        // getMousePos where (0,0) is the top left corner of the canvas
+        function getMousePos(canvas, evt) {
+            var rect = canvas.getBoundingClientRect();
+            return {
+            x: evt.clientX - rect.left,
+            y: evt.clientY - rect.top
+            };
+        }
+
+        var mousePos = {x:0, y:0};
+        var midX = (canvas.width/2);
+        var midY = (canvas.height/2);
+        context.fillStyle = "#014421";
+        context.font = "bold 25px Arial";
+        canvas.addEventListener('mousemove', function(evt) {
+            mousePos = getMousePos(canvas, evt);
+            var distX = mousePos.x - midX;
+            var distY = mousePos.y - midY;
+            xPos = mousePos.x;
+            yPos = mousePos.y;
+            // code below is used to put the current point beside the magnet
+            // context.clearRect(xPos, yPos, xPos+1, yPos+1);
+            // context.fillText("(" + Math.round(xPos) + "," + Math.round(yPos) + ")", xPos+50, yPos+50);    
+        }, false);
+        setInterval(drawMagnet, 5);
+
+		function drawMagnet(){
+			magnet.style.left = mousePos.x - 10 + "px";
+			magnet.style.top = mousePos.y + 60 + "px";
+		}
+    </script>
+</body>

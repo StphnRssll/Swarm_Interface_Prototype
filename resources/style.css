@@ -1,0 +1,17 @@
+body
+{
+    margin: 20;
+    padding: 20;
+    background: #9fbfdf;
+}
+img 
+{
+    pointer-events: none;
+}
+canvas {
+    border: 1px solid black;
+}
+.puck
+{
+    
+}
