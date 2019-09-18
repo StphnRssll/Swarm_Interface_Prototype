@@ -33,19 +33,19 @@
         var shapeRadius = 100;
         var centerX = canvas.width / 2;
         var centerY = canvas.height / 2;
+
         // when a menu option is selected
-        document.getElementById('sidesmenu').addEventListener("click", function(){
+        document.getElementById('sidesmenu').addEventListener("click", function(){ 
             context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas
-            // draw shape
-            sidesCount = document.getElementById('sidesmenu').value;
+            sidesCount = document.getElementById('sidesmenu').value; // get menu selection
             PolyGen(sidesCount, document.querySelector("canvas"), 0, shapeRadius, 8, "#222", 0, 0);
             // draw game circle
-            context.arc(centerX, centerY, shapeRadius, 0, 2 * Math.PI, false);
+            context.arc(centerX, centerY, shapeRadius, 0, 2 * Math.PI, false); 
             context.lineWidth = 2;
             context.stroke();
         });
 
-        setInterval(drawMagnet,10);
+        setInterval(drawMagnet,10); // calls draw functions every 10 ms
         setInterval(drawPuck,10);
     </script>
 
@@ -62,8 +62,6 @@
             return { x: evt.clientX - rect.left, y: evt.clientY - rect.top }
         }
         // every time 'mousemove' event occurs, call getMousePos
-        canvas.addEventListener('mousemove', function(evt) {mousePos = getMousePos(canvas, evt);}, false);
-
-        var puckDrag = 200; // defines "how slow" the puck follows the mouse      
+        canvas.addEventListener('mousemove', function(evt) {mousePos = getMousePos(canvas, evt);}, false);     
     </script>
 </body>
