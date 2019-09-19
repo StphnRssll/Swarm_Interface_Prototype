@@ -18,7 +18,6 @@ function drawPuck(){
     var mouseDistX = mousePos.x - puckPos.x; // distance from mouse to puck
     var mouseDistY = mousePos.y - puckPos.y;
 
-    
     //  iteratively change puck position based on centerDist and mouseDist
     var puckDrag = 200; // defines "how slow" the puck follows the mouse 
     if(centerDistScal<shapeRadius){ // if puck is in-bounds
