@@ -7,7 +7,8 @@
 <body>
     <form name="form">
         <select id="sidesmenu">
-            <option value="">Select a shape by number of sides</option>
+            <option value="">Select a shape by number of elements</option>
+            <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
             <option value="5">5</option>
@@ -33,21 +34,27 @@
         var shapeRadius = 150;
         var centerX = canvas.width / 2;
         var centerY = canvas.height / 2;
+        var sidesCount;
 
-
+        var puckLineInterval;
+        var puckInterval;
         // when a menu option is selected
         document.getElementById('sidesmenu').addEventListener("click", function(){ 
             context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas
             sidesCount = document.getElementById('sidesmenu').value; // get menu selection
+            clearInterval(puckLineInterval);
+            clearInterval(puckInterval);
             PolyGen(sidesCount, document.querySelector("canvas"), 0, shapeRadius, 5, "#222", 0, 0);
-            // draw game circle
-            context.arc(centerX, centerY, shapeRadius, 0, 2 * Math.PI, false); 
-            context.lineWidth = 1;
-            context.stroke();
+            setInterval(drawMagnet,10);
+            if(sidesCount != 2){
+                clearInterval(puckLineInterval);
+                puckInterval = setInterval(drawPuck,10); // draw puck every 10 ms
+                // draw game circle
+                context.arc(centerX, centerY, shapeRadius, 0, 2 * Math.PI, false); 
+                context.lineWidth = 1;
+                context.stroke();
+            } else { puckLineInterval = setInterval(drawPuckLine,10); }
         });
-
-        setInterval(drawMagnet,10); // calls draw functions every 10 ms
-        setInterval(drawPuck,10);
     </script>
 
     <img id="magnet" src="./resources/magnet.png" alt="HTML5 Icon"/>
