@@ -4,43 +4,45 @@
 // or https://github.com/cameronsamuels/polygen
 
 
-// Parameters: c = number of sides, a = canvas, m = canvas context,
-// e = shape radius, r = shape border thickness, o = shape border color
-// n = shape x position , s = shape y position
+// Parameters: c = number of sides, a = canvas, m(ctx) = canvas context,
+// e(r) = shape radius, r(thk) = shape border thickness, o(c) = shape border color
+// n(x) = shape x position , s(y) = shape y position
 
-function PolyGen(sides,canvas,m,radius,thickness,o,n,s) {
+function PolyGen(sides,canvas,ctx,r,thk,c,x,y) {
+	context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas
 	sides = sides; // sides
-	if (!canvas && !m) return; // canvas
-	if (!m) m = canvas.getContext("2d"); // context
-	if (!radius) radius = (Math.min(canvas.width, canvas.height)/2); // radius
-	m.lineWidth = thickness; // thickness
-	m.strokeStyle = o; // color
-	if (!n) n =  canvas.width / 2; // x
-	if (!s) s = canvas.height / 2; // y
+	if (!canvas && !ctx) return; // canvas
+	if (!ctx) ctx = canvas.getContext("2d"); // context
+	if (!r) r = (Math.min(canvas.width, canvas.height)/2); // radius
+	ctx.lineWidth = thk; // thickness
+	ctx.strokeStyle = c; // color
+	if (!x) x =  canvas.width / 2; // x
+	if (!y) y = canvas.height / 2; // y
 	
-	// draw poltgon
-	m.beginPath();
-	m.moveTo(n +  radius * Math.cos(0), s +  radius *  Math.sin(0));          
+	// draw polygon
+	ctx.beginPath();
+	ctx.moveTo(x +  r * Math.cos(0), y +  r *  Math.sin(0));          
 	for (i = 1; i <= sides + 1; i++){
-		xPos = n + radius * Math.cos(i * 2 * Math.PI / sides);
-		yPos = s + radius * Math.sin(i * 2 * Math.PI / sides);
-		m.lineTo(xPos,yPos);
-		m.fill();
+		xPos = x + r * Math.cos(i * 2 * Math.PI / sides);
+		yPos = y + r * Math.sin(i * 2 * Math.PI / sides);
+		ctx.lineTo(xPos,yPos);
+		ctx.fill(); 
 	}
-	m.fillStyle = "#415269";
-	m.fill();
-	m.stroke();
+	ctx.fillStyle = "#bac5d4"; // colorhexa.com - monochromatic base: #415269
+	ctx.fill(); // fill polygon color
+	ctx.stroke();
 	
 
 	// draw circles at verticies
 	for (i = 1; i <= sides + 1; i++){
-		xPos = n + radius * Math.cos(i * 2 * Math.PI / sides);
-		yPos = s + radius * Math.sin(i * 2 * Math.PI / sides);
-		m.lineTo(xPos,yPos);
-		m.fillStyle = "#824E2F";
-		m.beginPath();
-		m.arc(xPos, yPos, 10, 0, 2 * Math.PI, false);
-		m.fill();
-		m.moveTo(xPos,yPos);
+		xPos = x + r * Math.cos(i * 2 * Math.PI / sides);
+		yPos = y + r * Math.sin(i * 2 * Math.PI / sides);
+		ctx.lineTo(xPos,yPos);
+		ctx.fillStyle = "#444444"; // fill circles at vertices
+		ctx.beginPath();
+		ctx.arc(xPos, yPos, 8, 0, 2 * Math.PI, false);
+		ctx.stroke();
+		ctx.fill();
+		ctx.moveTo(xPos,yPos);
 		}
 	}

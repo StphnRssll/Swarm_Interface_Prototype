@@ -16,9 +16,11 @@ canvas {
     max-width: 100px;
     max-height: 100px;
     opacity: 0.8;
+    visibility: hidden;
 }
 #magnet
 {
     max-width: 50px;
     max-height: 50px;
+    visibility: hidden;
 }

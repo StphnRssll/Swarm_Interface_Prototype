@@ -2,6 +2,7 @@
     <script src="./resources/js/polygen.js"></script>
     <script src="./resources/js/functions.js"></script>
     <link rel="stylesheet" type="text/css" href="./resources/style.css">
+    <title>Human Swarm</title>
 </head>
 
 <body>
@@ -21,8 +22,9 @@
             <option value="12">12</option>
         </select>
     </form>
-    
     <canvas id="canvas" width="512" height="512"></canvas>
+    <button id="gen-button">Generate game</button>
+
     <script id="shapes">
         // setup canvas
         var canvas = document.getElementById('canvas');
@@ -35,17 +37,22 @@
         var centerX = canvas.width / 2;
         var centerY = canvas.height / 2;
         var sidesCount;
-
+        // vars for each function allow us to use clearInterval(var) to stop the function
         var puckLineInterval;
         var puckInterval;
+        var countDown;
+
+
         // when a menu option is selected
-        document.getElementById('sidesmenu').addEventListener("click", function(){ 
-            context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas
+        document.getElementById('gen-button').addEventListener("click", function(){ 
             sidesCount = document.getElementById('sidesmenu').value; // get menu selection
+            PolyGen(sidesCount, document.querySelector("canvas"), 0, shapeRadius, 5, "#222", 0, 0);
+            clearInterval(countDown);
+            countDown();
             clearInterval(puckLineInterval);
             clearInterval(puckInterval);
-            PolyGen(sidesCount, document.querySelector("canvas"), 0, shapeRadius, 5, "#222", 0, 0);
             setInterval(drawMagnet,10);
+            context.clearRect(midX-30, midY-250,60,85);
             if(sidesCount != 2){
                 clearInterval(puckLineInterval);
                 puckInterval = setInterval(drawPuck,10); // draw puck every 10 ms
@@ -54,12 +61,14 @@
                 context.lineWidth = 1;
                 context.stroke();
             } else { puckLineInterval = setInterval(drawPuckLine,10); }
+            document.getElementById('magnet').style.visibility = 'visible';
+            document.getElementById('puck').style.visibility = 'visible';
         });
     </script>
 
-    <img id="magnet" src="./resources/magnet.png" alt="HTML5 Icon"/>
-    <img id="puck" src="./resources/puck.png" alt="HTML5 Icon"/>
 
+    <img id="magnet" src="./resources/magnet.png"/>
+    <img id="puck" src="./resources/puck.png"/>
     <script id="mouse">
         var midX = (canvas.width/2); // get coordinates of middle of the canvas
         var midY = (canvas.height/2);

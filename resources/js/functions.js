@@ -19,7 +19,7 @@ function drawPuck(){
     var mouseDistY = mousePos.y - puckPos.y;
 
     // iteratively change puck position based on centerDist and mouseDist
-    var puckDrag = 150; // defines "how slow" the puck follows the mouse 
+    var puckDrag = 300; // defines "how slow" the puck follows the mouse 
     if(centerDistScal<shapeRadius){ // if puck is in-bounds
         puckPos.x += mouseDistX/puckDrag; // puck moves towards mouse
         puckPos.y += mouseDistY/puckDrag;
@@ -52,4 +52,21 @@ function drawPuckLine(){
     // draw puck - 10 and 25 are offsets to properly center the image on the mouse
     puck.style.left = puckPos.x - 10 + "px";
     puck.style.top = puckPos.y + 25 + "px";   
+}
+
+function countDown(){
+    var seconds = 4;
+    context.font = '110px arial';
+    context.fillStyle = "#ffffff"; // text color
+    context.fillText(seconds, midX-30, midY-170);
+    var countdown = setInterval(function() {
+        seconds--;
+        context.clearRect(midX-30, midY-250,60,85);
+        context.fillText(seconds, midX-30, midY-170);
+        if (seconds <= 0){
+            clearInterval(countdown);
+            context.clearRect(midX-30, midY-250,60,85);
+        }
+    }, 1000);
+    context.clearRect(midX-30, midY-250,60,85);
 }
