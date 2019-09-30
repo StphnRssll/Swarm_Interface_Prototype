@@ -9,10 +9,10 @@
 // n(x) = shape x position , s(y) = shape y position
 
 function PolyGen(sides,canvas,ctx,r,thk,c,x,y) {
-	context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas
 	sides = sides; // sides
 	if (!canvas && !ctx) return; // canvas
 	if (!ctx) ctx = canvas.getContext("2d"); // context
+	ctx.clearRect(0, 0, canvas.width, canvas.height); // clear canvas
 	if (!r) r = (Math.min(canvas.width, canvas.height)/2); // radius
 	ctx.lineWidth = thk; // thickness
 	ctx.strokeStyle = c; // color
