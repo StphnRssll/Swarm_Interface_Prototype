@@ -79,7 +79,6 @@ function driver(canvas,context){
             PolyGen(sidesCount, document.querySelector("canvas"), 0, shapeRadius, 5, "#222", 0, 0);
             clearInterval(countDown);
             countDown();
-            //recordData();
             setInterval(drawMagnet,20);
             context.clearRect(midX-30, midY-250,60,85);
             if(sidesCount != 2){
