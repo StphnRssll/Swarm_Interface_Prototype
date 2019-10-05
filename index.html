@@ -24,31 +24,23 @@
         <button type="button" id="gen-button">Generate game</button>
     </form>
     <canvas id="canvas"></canvas>
-    <script>
-        var canvas = document.getElementById('canvas');
-        var context = canvas.getContext('2d');
-        var rect = canvas.getBoundingClientRect();
-
-        // setup canvas
-        canvas.display= 'block';
-        canvas.height = 512;
-        canvas.width = 512;
-       
-        // initialize things for shape drawing
-        var shapeRadius = 150;
-        var midX = (canvas.width/2); // get coordinates of middle of the canvas
-        var midY = (canvas.height/2);
-        var mousePos = {x: midX, y: midY};
-        var puckPos = {x: midX, y: midY};
-
-        // vars for each function allow us to use clearInterval(var) to stop the function
-        var puckLineInterval;
-        var puckInterval;
-        var countDownInterval;
-        
-        driver(canvas,context);
-    </script>
-
     <img id="magnet" src="./resources/magnet.png"/>
     <img id="puck" src="./resources/puck.png"/>
+    <script src="https://www.gstatic.com/firebasejs/7.0.0/firebase.js"></script>
+    <script>
+    // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyAaXhFkRH2Tsrc7AnLFfcirRfJRXZdlUNk",
+        authDomain: "swarm-bc313.firebaseapp.com",
+        databaseURL: "https://swarm-bc313.firebaseio.com",
+        projectId: "swarm-bc313",
+        storageBucket: "swarm-bc313.appspot.com",
+        messagingSenderId: "153424219705",
+        appId: "1:153424219705:web:b79e3529658b07cca547e8",
+        measurementId: "G-N3C4HLPSDE"
+      };
+      // Initialize Firebase
+      var fb = firebase.initializeApp(firebaseConfig);
+    </script>
+    <script src="./resources/js/main.js"></script>
 </body>

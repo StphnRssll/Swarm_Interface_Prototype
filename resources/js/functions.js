@@ -74,12 +74,18 @@ function countDown(){
 function driver(canvas,context){
 
         // when a menu option is selected
-        document.getElementById('gen-button').addEventListener("click", function(){ 
-            var sidesCount = document.getElementById('sidesmenu').value; // get menu selection
+        // document.getElementById('gen-button').addEventListener("click", function(){ 
+            // var sidesCount = document.getElementById('sidesmenu').value; // get menu selection
             PolyGen(sidesCount, document.querySelector("canvas"), 0, shapeRadius, 5, "#222", 0, 0);
-            clearInterval(countDown);
-            countDown();
-            setInterval(drawMagnet,20);
+            // clearInterval(countDown);
+            // countDown();
+            // setInterval(drawMagnet,20);
+            drawMagnet()
+
+            fb.database().ref("/").on('child_changed', (snapshot) => {
+                mousePos = snapshot.val()   
+                drawMagnet()
+            })
             context.clearRect(midX-30, midY-250,60,85);
             if(sidesCount != 2){
                 clearInterval(puckLineInterval);
@@ -91,16 +97,18 @@ function driver(canvas,context){
             } else { puckLineInterval = setInterval(drawPuckLine,20); }
             document.getElementById('magnet').style.visibility = 'visible';
             document.getElementById('puck').style.visibility = 'visible';
-        });
+        // });
 
         // every time 'mousemove' event occurs, call getMousePos
         var counter = 0;
         canvas.addEventListener('mousemove', function(evt) {
-            mousePos = getMousePos(canvas, evt);
-            counter++
-            if(counter%100 == 0){
-                console.log(mousePos);
-            }
+            // mousePos = getMousePos(canvas, evt);
+            var moveUpdate = getMousePos(canvas, evt)
+            fb.database().ref("/").child("position").update(moveUpdate)
+            // counter++
+            // if(counter%100 == 0){
+            //     console.log(mousePos);
+            // }
         }, false);
 }
 
