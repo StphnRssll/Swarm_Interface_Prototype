@@ -1,0 +1,44 @@
+App
+	this.state = {
+		url = window.location
+		sideNum = url.split(/)[1]
+		miceID =  url.split(/)[2]
+		mice: ""
+	}
+
+	componentDidMount() {
+		firebase.child(mice).on(child_changed, snapshot => {
+			let allMice = []
+			firebase.mice.map(mouse => {
+				let component = <Mouse x={mouse.position.x} y={mouse.position.y} id={mouse.id} >
+				allMice.push(component)
+			}
+			this.setState({
+				mice: allMice
+			})
+		 })
+	}
+
+	render() {
+		return(
+			<Polygon numSides={this.state.sidenUm} >
+				{ this.state.mice }
+			</Polygon>
+		)
+	}
+	
+Polygon
+	
+	render() {
+		for vertex in this.props.numSides:	
+	}
+
+Mouse 
+	
+	move(coordinates) {
+		firebase.mice.child(this.props.id).update(coordinates)
+	}
+	
+	render() {
+		<img></img>
+	}
